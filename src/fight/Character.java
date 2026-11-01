@@ -1,6 +1,6 @@
 package fight;
 
-public class Character{
+public abstract class Character{
     protected String name;
     protected int hp;
     protected int maxHp;
@@ -9,14 +9,14 @@ public class Character{
     protected boolean isAlive;
     protected int abilityCooldown;
 
-    public Character(String name, int hp, int attack, int defense){
+    public Character(String name, int hp, int attack, int defense, int abilityCooldown){
         this.name = name;
         this.hp = hp;
         this.maxHp = hp;
         this.attack = attack;
         this.defense = defense;
         this.isAlive = true;
-        this.abilityCooldown = 0;
+        this.abilityCooldown = abilityCooldown;
     }
 
     public void takeDamage(int damage){
@@ -30,12 +30,8 @@ public class Character{
         }
     }
 
-    public void heal(int amount){
-        hp = Math.min(maxHp, hp + amount);
-    }
-
     public boolean isAlive(){
-        return isAlive;
+        return isAlive && hp > 0;
     }
 
     public String getName(){
@@ -57,4 +53,5 @@ public class Character{
         target.takeDamage(attack);
         abilityCooldown--;
     }
+    
 }

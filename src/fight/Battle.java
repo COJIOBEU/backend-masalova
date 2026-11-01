@@ -1,8 +1,8 @@
 package fight;
 
 import java.util.ArrayList;
-import java.util.List;
 import java.util.Collections;
+import java.util.List;
 
 public class Battle {
     private final Squad squad1;
@@ -55,6 +55,7 @@ public class Battle {
                     c.act(target);
                 }
             }
+            System.out.println("\n");
 
         }
         printResult();
@@ -64,7 +65,7 @@ public class Battle {
         System.out.println("БОЙ ОКОНЧЕН!");
         if (squad1.isDefeated() && squad2.isDefeated()){
             System.out.println("Ничья. Оба отряда повержены!");
-        } else if (currentRound >= maxRounds) {
+        } else if (currentRound > maxRounds) {
             System.out.println("Ничья. Бой окончен по лимиту раундов");
         } else if (squad1.isDefeated()){
             System.out.println("Победил отряд " + squad2.getName() + "!!!");

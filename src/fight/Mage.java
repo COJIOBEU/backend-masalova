@@ -2,7 +2,7 @@ package fight;
 public class Mage extends Character{
     
     public Mage(String name){
-        super(name, 80, 25, 4);
+        super(name, 80, 25, 4, 2);
     }
 
     @Override 
@@ -17,7 +17,7 @@ public class Mage extends Character{
                 target.isAlive = false;
                 System.out.println("!!! " + target.getName() + " погиб !!!");
             }
-            abilityCooldown = 3;
+            abilityCooldown = 2;
         }
     }
 }

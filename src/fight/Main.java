@@ -14,7 +14,7 @@ public class Main {
         squad2.addMember(new Mage("Йен"));
         squad2.addMember(new Barbarian("Rfqlfy"));
 
-        Battle battle = new Battle(squad1, squad2, 20);
+        Battle battle = new Battle(squad1, squad2, 10);
 
         battle.fight();
     }

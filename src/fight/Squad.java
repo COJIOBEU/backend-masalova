@@ -5,8 +5,8 @@ import java.util.List;
 import java.util.concurrent.ThreadLocalRandom;
 
 public class Squad{
-    private String name;
-    private List <Character> members;
+    private final String name;
+    private final List <Character> members;
 
     public Squad(String name){
         this.name = name;
