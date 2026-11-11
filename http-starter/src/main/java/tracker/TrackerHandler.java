@@ -29,14 +29,24 @@ public class TrackerHandler implements HttpHandler {
         try {
             if (path.equals("/projects") && method.equals("POST")) {
                 createProject(exchange);
-            } else if (path.equals("/projects") && method.equals("GET")) {
+            } else if (path.equals("/projects") && method.equals("GET")){
                 getProjects(exchange);
-            } else if (path.equals("/tasks") && method.equals("POST")) {
+            } else if (path.matches("/projects/[^/]+") && method.equals("GET")){
+                getProjectById(exchange);
+            } else if (path.matches("/projects/[^/]+") && method.equals("PUT")){
+                updateProject(exchange);
+            } else if (path.matches("/projects/[^/]+") && method.equals("DELETE")){
+                deleteProject(exchange);
+            } else if (path.equals("/tasks") && method.equals("POST")){
                 createTask(exchange);
-            } else if (path.equals("/tasks") && method.equals("GET")) {
-                getTasks(exchange);
             } else if (path.matches("/tasks/[^/]+/complete") && method.equals("POST")) {
                 completeTask(exchange);
+            } else if (path.equals("/tasks") && method.equals("GET")){
+                getTasks(exchange);
+            } else if (path.matches("/tasks/[^/]+") && method.equals("GET")){
+                getTaskById(exchange);
+            } else if (path.matches("/tasks/[^/]+") && method.equals("DELETE")) {
+                deleteTask(exchange);
             } else {
                 sendResponse(exchange, 404, "{\"error\": \"Endpoint not found\"}");
             }
@@ -61,6 +71,30 @@ public class TrackerHandler implements HttpHandler {
     private void getProjects(HttpExchange exchange) throws IOException {
         List<Project> projects = service.getProjects();
         sendResponse(exchange, 200, mapper.writeValueAsString(projects));
+    }
+
+    private String extractId(HttpExchange exchange) {
+        return exchange.getRequestURI().getPath().split("/")[2];
+    }
+
+    private void getProjectById(HttpExchange exchange) throws IOException{
+        Project project = service.getProject(extractId(exchange));
+        sendResponse(exchange, 200, mapper.writeValueAsString(project));
+    }
+
+    private void updateProject(HttpExchange exchange) throws IOException{
+        String body = readBody(exchange);
+        JsonNode json = mapper.readTree(body);
+        String newName = json.get("name").asText();
+
+        Project project = service.updateProject(extractId(exchange), newName);
+        sendResponse(exchange, 200, mapper.writeValueAsString(project));
+
+    }
+
+    private void deleteProject(HttpExchange exchange) throws IOException{
+        service.deleteProject(extractId(exchange));
+        sendResponse(exchange, 204, "");
     }
 
     private void createTask(HttpExchange exchange) throws IOException {
@@ -103,6 +137,16 @@ public class TrackerHandler implements HttpHandler {
         
         Task task = service.completeTask(taskId);
         sendResponse(exchange, 200, mapper.writeValueAsString(task));
+    }
+
+    private void getTaskById (HttpExchange exchange) throws IOException{
+        Task task = service.getTask(extractId(exchange));
+        sendResponse(exchange, 200, mapper.writeValueAsString(task));
+    }
+
+    private void deleteTask (HttpExchange exchange) throws IOException{
+        service.deleteTask(extractId(exchange));
+        sendResponse(exchange, 204, "");
     }
 
     private String readBody(HttpExchange exchange) throws IOException {
