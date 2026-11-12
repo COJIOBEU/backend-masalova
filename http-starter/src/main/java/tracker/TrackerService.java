@@ -31,6 +31,10 @@ public class TrackerService {
     }
 
     public Project updateProject(String projectId, String newName) {
+        if (newName == null || newName.trim().isEmpty()) {
+        throw new IllegalArgumentException("Название задачи не может быть пустым");
+        }
+
         Project project = getProject(projectId);
         project.setName(newName);
         return project;
@@ -45,6 +49,10 @@ public class TrackerService {
     }
 
     public Task createTask(String title, String projectId, String type, String severity, Integer storyPoints) {
+        if (title == null || title.trim().isEmpty()) {
+        throw new IllegalArgumentException("Название задачи не может быть пустым");
+        }         
+        
         Project project = getProject(projectId);
         
         if (!project.isActive()) {
