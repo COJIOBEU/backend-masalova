@@ -17,10 +17,4 @@ public class BugTask extends Task {
     public String getType() {
         return "BugTask";
     }
-
-    @Override
-    public void onComplete(Project project) {
-        this.status = "DONE";
-        project.decrementOpenTasks();
-    }
 }

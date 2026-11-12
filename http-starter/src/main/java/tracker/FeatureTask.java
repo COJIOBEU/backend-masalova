@@ -17,10 +17,4 @@ public class FeatureTask extends Task {
     public String getType() {
         return "FeatureTask";
     }
-
-    @Override
-    public void onComplete(Project project) {
-        this.status = "DONE";
-        project.decrementOpenTasks();
-    }
 }

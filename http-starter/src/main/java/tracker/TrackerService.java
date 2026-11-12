@@ -32,7 +32,7 @@ public class TrackerService {
 
     public Project updateProject(String projectId, String newName) {
         if (newName == null || newName.trim().isEmpty()) {
-        throw new IllegalArgumentException("Название задачи не может быть пустым");
+        throw new IllegalArgumentException("Название проекта не может быть пустым");
         }
 
         Project project = getProject(projectId);

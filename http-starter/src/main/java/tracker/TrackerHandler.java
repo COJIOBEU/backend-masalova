@@ -156,7 +156,12 @@ public class TrackerHandler implements HttpHandler {
 
     private String readBody(HttpExchange exchange) throws IOException {
         InputStream is = exchange.getRequestBody();
-        return new String(is.readAllBytes(), StandardCharsets.UTF_8);
+
+        byte[] bytes = is.readAllBytes();
+        if (bytes.length > 1_000_000){
+            throw new IllegalArgumentException("Request body too large");
+        }
+        return new String(bytes, StandardCharsets.UTF_8);
     }
 
     private void sendResponse(HttpExchange exchange, int statusCode, String response) throws IOException {
