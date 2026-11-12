@@ -50,12 +50,20 @@ public class TrackerHandler implements HttpHandler {
             } else {
                 sendResponse(exchange, 404, "{\"error\": \"Endpoint not found\"}");
             }
-        } catch (IllegalArgumentException e) {
-            sendResponse(exchange, 400, "{\"error\": \"" + e.getMessage() + "\"}");
-        } catch (IllegalStateException e) {
-            sendResponse(exchange, 409, "{\"error\": \"" + e.getMessage() + "\"}");
-        } catch (Exception e) {
-            sendResponse(exchange, 500, "{\"error\": \"Internal server error\"}");
+        } catch (Exception e){
+            String exceptionName = e.getClass().getName();
+            boolean isJsonError = exceptionName.contains("JsonProcessing") || 
+                                exceptionName.contains("JsonMapping") || exceptionName.contains("StreamRead");
+            
+            if (isJsonError){
+                sendResponse(exchange, 400, "{\"error\": \"Invalid JSON format\"}");
+            } else if (e instanceof IllegalArgumentException){
+                sendResponse(exchange, 400, "{\"error\": \"" + e.getMessage() + "\"}");
+            } else if (e instanceof IllegalStateException){
+                sendResponse(exchange, 409, "{\"error\": \"" + e.getMessage() + "\"}");
+            } else {
+                sendResponse(exchange, 500, "{\"error\": \"Internal server error\"}");
+            }
         }
     }
 
@@ -132,10 +140,7 @@ public class TrackerHandler implements HttpHandler {
     }
 
     private void completeTask(HttpExchange exchange) throws IOException {
-        String path = exchange.getRequestURI().getPath();
-        String taskId = path.split("/")[2];
-        
-        Task task = service.completeTask(taskId);
+        Task task = service.completeTask(extractId(exchange));
         sendResponse(exchange, 200, mapper.writeValueAsString(task));
     }
 

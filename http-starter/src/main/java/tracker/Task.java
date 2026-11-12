@@ -26,7 +26,10 @@ public abstract class Task {
     public String getProjectId() { return projectId; }
     public void setProjectId(String projectId) { this.projectId = projectId; }
 
-    public abstract void onComplete(Project project);
+    public void onComplete(Project project){
+        this.status = "DONE";
+        project.decrementOpenTasks();
+    }
 
     public abstract String getType();
 }
