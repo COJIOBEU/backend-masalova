@@ -1,0 +1,26 @@
+Создаем проект (Скопируй полученный id как ВАШ_PROJECT_ID)
+curl.exe --% -X POST http://localhost:8080/projects -H "Content-Type: application/json" -d "{\"name\": \"Spring Boot Project\"}"
+
+Создаем Задачу 1 (Баг) (Скопируй её id как ВАШ_TASK_1_ID)
+curl.exe --% -X POST http://localhost:8080/tasks -H "Content-Type: application/json" -d "{\"title\": \"Fix Login Bug\", \"projectId\": \"ВАШ_PROJECT_ID\", \"type\": \"BugTask\", \"severity\": \"High\", \"storyPoints\": 5}"
+
+Создаем Задачу 2 (Фича, останется незавершенной) (Скопируй её id как ВАШ_TASK_2_ID)
+curl.exe --% -X POST http://localhost:8080/tasks -H "Content-Type: application/json" -d "{\"title\": \"Add Dark Mode\", \"projectId\": \"ВАШ_PROJECT_ID\", \"type\": \"FeatureTask\", \"severity\": \"Low\", \"storyPoints\": 3}"
+
+Смотрим список всех задач (Должны быть видны обе)
+curl.exe --% -X GET http://localhost:8080/tasks
+
+Завершаем Задачу 1
+curl.exe --% -X POST http://localhost:8080/tasks/ВАШ_TASK_1_ID/complete
+
+Удаляем Задачу 2 (незавершенную) (Ожидаем 204 No Content, пустой ответ)
+curl.exe --% -X DELETE http://localhost:8080/tasks/ВАШ_TASK_2_ID
+
+Фильтруем задачи (Должна остаться только Задача 1 типа BugTask, Задача 2 удалена)
+curl.exe --% -X GET http://localhost:8080/tasks?type=BugTask
+
+Негативный тест - завершение несуществующей задачи (Ожидаем 409 Conflict)
+curl.exe --% -X POST http://localhost:8080/tasks/fake-id-123/complete
+
+Негативный тест - создание проекта с пустым именем (Ожидаем 400 Bad Request)
+curl.exe --% -X POST http://localhost:8080/projects -H "Content-Type: application/json" -d "{\"name\": \"   \"}"
