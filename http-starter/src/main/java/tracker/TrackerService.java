@@ -5,6 +5,9 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import org.springframework.stereotype.Service;
+
+@Service 
 public class TrackerService {
     private final Map<String, Project> projects = new HashMap<>();
     private final Map<String, Task> tasks = new HashMap<>();
